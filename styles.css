@@ -1,0 +1,99 @@
+#selectHolder {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin-top: 20vh;
+    border: #0c0c0c 5px;
+}
+#timeline-container {
+    margin-top: 50px;
+    height: 10px;
+}
+
+#buttonHolder {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin-top: 20vh;
+}
+select {
+    width: 100%;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.chart-area {
+    width: 100% !important;
+}
+canvas {
+    position: absolute;
+}
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 10px;
+}
+.dot {
+    fill: steelblue;
+    stroke: steelblue;
+}
+.dot:hover {
+    fill: red;
+    stroke: red;
+}
+#emotion-bar {
+    width: 100%; /* Fixed width for the bar */
+    height: 20px;
+    display: block;
+}
+.emotion-segment {
+    height: 100%;
+    flex-grow: 1;
+    display: inline-block;
+    transition: width 0.5s; /* Add a transition for smoother animation */
+}
+
+#happy-segment {
+    background-color: green;
+}
+
+#neutral-segment {
+    background-color: yellow;
+}
+
+#sad-segment {
+    background-color: red;
+}
+
+.data-rectangle {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: royalblue;
+    color: white;
+    text-align: center;
+    line-height: 50px;
+    margin: 1px;
+    cursor: pointer;
+    overflow: hidden;
+}
+.tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    display: none;
+    z-index: 9999; /* Ensure the tooltip appears on top */
+}
+.emotion-bar {
+    width: 100%;
+    display: flex;
+}
+.emotion-result-segement {
+    height: 20px;
+}
+.emotion-bar-detail {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}

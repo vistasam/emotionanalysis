@@ -1,0 +1,49 @@
+<XMLDB xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" PATH="blocks/emotionanalysis/db" VERSION="20230306" COMMENT="XMLDB file for emotion analysis" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+<TABLES>
+    <TABLE NAME="block_ea_user_records_holder" COMMENT="record for the user">
+    <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Id of the record"/>
+        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the student"/>
+        <FIELD NAME="instance_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id of instance of the video"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the course"/>
+        <FIELD NAME="resource_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the resource"/>
+        <FIELD NAME="gender" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="gender identity"/>
+        <FIELD NAME="age_group" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="age group"/>
+        <FIELD NAME="total_duration" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Total duaration of the lecture session"/>
+        <FIELD NAME="activity_start_date" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Record when user starts actvitiy first time"/>
+        <FIELD NAME="activity_finish_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Record when user finish the activity"/>
+        <FIELD NAME="reset_activity" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Activity Reset Status"/>
+        <FIELD NAME="record_analyze" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="This is flag set to check the new activity status or not"/>
+    </FIELDS>
+    <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+    </KEYS>
+    </TABLE>
+    <TABLE NAME="block_emotionanalysis" COMMENT="each record is one emotion record">
+    <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Id of the record"/>
+        <FIELD NAME="user_record_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the user"/>
+        <FIELD NAME="emotion_state" TYPE="text" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the course"/>
+        <FIELD NAME="video_timestamp" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the resource"/>
+    </FIELDS>
+    <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_ea_user_records_holder" TYPE="foreign" FIELDS="user_record_id" REFTABLE="block_ea_user_records_holder" REFFIELDS="id"/>
+    </KEYS>
+    </TABLE>
+    <TABLE NAME="block_ea_session_tracker" COMMENT="Track the user session ">
+    <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Id of the record"/>
+        <FIELD NAME="user_record_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the student"/>
+        <FIELD NAME="session_start_time" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Hold the session start time"/>
+        <FIELD NAME="session_finish_time" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Hold the activity finish time"/>
+        <FIELD NAME="seek_data" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Holding seeking information inbetween the session"/>
+        <FIELD NAME="start_watch_time" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Hold the time user watched video"/>
+        <FIELD NAME="finish_watch_time" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Hold the time user watched video"/>
+    </FIELDS>
+    <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+    </KEYS>
+    </TABLE>
+</TABLES>
+</XMLDB>
