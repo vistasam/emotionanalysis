@@ -239,6 +239,9 @@ define(
                     while (dataTable.rows.length > 0) {
                         dataTable.deleteRow(0);
                     }
+                    while (emotionContainer.firstChild) {
+                        emotionContainer.removeChild(emotionContainer.firstChild);
+                    }
                     // Create a new row for the dataTable headers
                     let headerRow = dataTable.insertRow();
                     // Create a single header cell for the additional information
@@ -349,6 +352,7 @@ define(
                         let watchDurationCell = sessionRow.insertCell();
                         watchDurationCell.textContent = session.start_watch_time + ' - ' + session.finish_watch_time;
                     });
+
                     $(sessionCell).on('click', () => {
                         if (sessionTable.parentNode === document.body) {
                             document.body.removeChild(sessionTable);
@@ -404,10 +408,6 @@ define(
                 console.log(data);
             });
         }
-        /**
-         *@param {int} event id of the event for filtering
-         *@param {array} data is response from ajax call
-         */
         // Function to handle course selection
         /**
          * @param {int} event id of the event for filter of data
@@ -594,31 +594,53 @@ define(
         function createDataRectangles(formattedData) {
             const dataContainer = document.getElementById('data-container');
             const infoDisplay = document.getElementById('info-display');
+            dataContainer.innerHTML = '';
+            infoDisplay.innerHTML = '';
 
-            // eslint-disable-next-line no-unused-vars
-            formattedData.forEach((data, index) => {
-                // eslint-disable-next-line no-unused-vars
+            // Sort the data by starting values in ascending order
+            formattedData.sort((a, b) => a.value - b.value);
+
+            for (let i = 0; i < formattedData.length; i++) {
+                const data = formattedData[i];
                 const emotion = data.label.toLowerCase();
-                const rectangle = document.createElement('div');
                 const emoji = getEmoji(emotion);
-                rectangle.className = 'data-rectangle ' + emotion;
-                rectangle.innerHTML = `${emoji}`;
 
-                // Add a mouseover event listener to display info in the fixed div
-                rectangle.addEventListener('mouseover', () => {
-                    infoDisplay.innerHTML = `Emotion: ${data.label}${getEmoji(emotion)} <br>Timestamp: ${data.value}`;
-                    infoDisplay.style.backgroundColor = "skyblue";
-                });
+                // Calculate the number of boxes for this emotion
+                let numBoxes = 0;
 
-                // Add a mouseout event listener to hide the info when not hovering
-                rectangle.addEventListener('mouseout', () => {
-                    infoDisplay.innerHTML = '';
-                    infoDisplay.style.backgroundColor = "";
-                });
+                // If it's the last data point, calculate the number of boxes differently
+                if (i === formattedData.length - 1) {
+                    numBoxes = 1;
+                } else {
+                    numBoxes = formattedData[i + 1].value - data.value;
+                }
 
-                dataContainer.appendChild(rectangle);
-            });
+                // Create boxes for this emotion
+                for (let j = 0; j < numBoxes; j++) {
+                    const rectangle = document.createElement('div');
+                    rectangle.className = 'data-rectangle ' + emotion;
+                    rectangle.innerHTML = emoji;
+
+                    // Calculate the timestamp for this box
+                    const timestamp = data.value + j;
+
+                    // Add a mouseover event listener to display info in the fixed div
+                    rectangle.addEventListener('mouseover', () => {
+                        infoDisplay.innerHTML = `Emotion: ${data.label} ${emoji} <br>Timestamp: ${timestamp}`;
+                        infoDisplay.style.backgroundColor = "skyblue";
+                    });
+
+                    // Add a mouseout event listener to hide the info when not hovering
+                    rectangle.addEventListener('mouseout', () => {
+                        infoDisplay.innerHTML = '';
+                        infoDisplay.style.backgroundColor = "";
+                    });
+
+                    dataContainer.appendChild(rectangle);
+                }
+            }
         }
+
         /**
          *Function To Return Emoji
          * @param {string} emotion
