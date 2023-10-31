@@ -151,8 +151,6 @@ define(
                         let studentValueCell = studentRow.insertCell();
                         studentValueCell.textContent = data.userName;
                     }
-
-
                     const colors = {
                         positive: "blue",
                         neutral: "yellow",
@@ -235,7 +233,7 @@ define(
                     generategraph(Object.entries(countOfSecond), sctx, chartSelectedType);
                     // eslint-disable-next-line no-unused-vars
                     let totalDuration = fetchRequest.totalduration;
-                    // CreateDataRectangles(data.formattedData);
+                    createDataRectangles(data.formattedData);
 
                     // Clear the existing dataTable data for new generation
                     while (dataTable.rows.length > 0) {
@@ -314,12 +312,6 @@ define(
 
                     let totalNumberOfEmotionValueCell = totalNumberOfEmotions.insertCell();
                     totalNumberOfEmotionValueCell.textContent = totalDetectedEmotions;
-
-                    let emotionTimeLine = dataTable.insertRow();
-                    emotionTimeLine.classList.add('text-center');
-                    let emotionTimeLineCell = emotionTimeLine.insertCell();
-                    emotionTimeLineCell.colSpan = 6;
-                    emotionTimeLineCell.textContent = "Emotion Timeline Window";
                     // Create a new row for the dataTable headers
                     let sessionRow = dataTable.insertRow();
                     let sessionInformation;
@@ -595,39 +587,58 @@ define(
                 window.location.reload();
             });
         }
-        // Function to create data rectangles and tooltips
         /**
-         *function to represent data on timeline
-         *@param {array} formattedData of the values of emotions
+         *function to create datapoint
+         * @param {array} formattedData
          */
-        // eslint-disable-next-line no-unused-vars
         function createDataRectangles(formattedData) {
             const dataContainer = document.getElementById('data-container');
-            const tooltip = document.getElementById('tooltip');
+            const infoDisplay = document.getElementById('info-display');
+
             // eslint-disable-next-line no-unused-vars
             formattedData.forEach((data, index) => {
+                // eslint-disable-next-line no-unused-vars
+                const emotion = data.label.toLowerCase();
                 const rectangle = document.createElement('div');
-                rectangle.className = 'data-rectangle';
-                rectangle.textContent = data.value;
+                const emoji = getEmoji(emotion);
+                rectangle.className = 'data-rectangle ' + emotion;
+                rectangle.innerHTML = `${emoji}`;
 
-                rectangle.addEventListener('mouseover', (event) => {
-                    const tooltip = document.getElementById('tooltip');
-                    const rect = event.target.getBoundingClientRect();
-                    // eslint-disable-next-line no-console
-                    tooltip.style.left = rect.left + 'px';
-                    tooltip.style.top = rect.top - 30 + 'px'; // Adjust the tooltip position
-                    tooltip.textContent = `${data.label}: ${data.value}`;
-                    tooltip.style.display = 'inline-block';
+                // Add a mouseover event listener to display info in the fixed div
+                rectangle.addEventListener('mouseover', () => {
+                    infoDisplay.innerHTML = `Emotion: ${data.label}${getEmoji(emotion)} <br>Timestamp: ${data.value}`;
+                    infoDisplay.style.backgroundColor = "skyblue";
                 });
 
-                // Add a mouseout event listener to hide the tooltip
+                // Add a mouseout event listener to hide the info when not hovering
                 rectangle.addEventListener('mouseout', () => {
-                    tooltip.style.display = 'none';
+                    infoDisplay.innerHTML = '';
+                    infoDisplay.style.backgroundColor = "";
                 });
 
                 dataContainer.appendChild(rectangle);
             });
         }
+        /**
+         *Function To Return Emoji
+         * @param {string} emotion
+         * @return {string} emojiMap
+         */
+        function getEmoji(emotion) {
+            const emojiMap = {
+                'happy': '\u{1F604}', // 😄
+                'sad': '\u{1F622}', // 😢
+                'angry': '\u{1F621}', // 😡
+                'disgusted': '\u{1F92E}', // 🤮
+                'surprised': '\u{1F632}', // 😲
+                'fearful': '\u{1F628}', // 😨
+                'neutral': '\u{1F610}',
+            };
+
+            // Return the emoji for the specified emotion, or a default emoji if not found
+            return emojiMap[emotion] || '\u{1F610}'; // Use a neutral emoji as the default
+        }
+
         // Format the timestamp to minutes:seconds
         /**
          *@param {int} timestampInSeconds
